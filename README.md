@@ -85,6 +85,8 @@ This project follows a layered architecture:
 - `models.py`: Defines database schemas.
 - `tasks.py`: Handles Celery asynchronous tasks.
 
+Also, [here's the ERD](utils/docs/erd.png) (Entity Relationship Diagram) for the database schema!
+
 
 ## Testing
 
