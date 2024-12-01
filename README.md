@@ -111,6 +111,12 @@ pytest unit_tests/authentication
 
 A reminder that the test [test_rate_limit_reset_after_window](unit_tests/authentication/test_authentication.py) takes 1 minute to run, as it tests the rate limit feature.
 
+
+Also, you can check the test coverage by running:
+```bash
+pytest --cov=. --cov-report=term-missing
+```
+
 ## API Documentation
 
 Access Swagger and Redoc documentation at:
