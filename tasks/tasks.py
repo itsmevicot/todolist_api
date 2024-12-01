@@ -2,6 +2,7 @@ import logging
 from celery import shared_task
 from django.conf import settings
 from django.core.mail import send_mail
+from django.utils.timezone import localtime
 
 from tasks.enum import TaskStatus
 from tasks.repository import TaskRepository
@@ -21,9 +22,13 @@ def send_expiry_reminder():
 
         for task in tasks_to_remind:
             try:
+                local_expires_at = localtime(task.expires_at).strftime('%B %d, %Y, at %I:%M %p')
+
+                email_message = f'Your task "{task.title}" is set to expire on {local_expires_at}. ⏰'
+
                 send_mail(
                     subject="Task Expiry Reminder",
-                    message=f"Your task '{task.title}' is set to expire at {task.expires_at}.",
+                    message=email_message,
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[task.owner.email],
                 )

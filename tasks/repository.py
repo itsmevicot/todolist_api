@@ -2,7 +2,7 @@ from datetime import timedelta, datetime
 from typing import Optional, List
 
 from django.db.models import QuerySet
-from django.utils.timezone import now
+from django.utils.timezone import now, localtime
 
 from tasks.enum import TaskStatus
 from tasks.models import Task
@@ -72,10 +72,12 @@ class TaskRepository:
         Fetch tasks that are set to expire within the next `hours`, excluding tasks
         with a status of DONE, EXPIRED or CANCELLED.
         """
-        three_hours_later = now() + timedelta(hours=hours)
+        current_time = localtime(now())
+        three_hours_later = current_time + timedelta(hours=hours)
+
         return Task.objects.filter(
             expires_at__lte=three_hours_later,
-            expires_at__gt=now(),
+            expires_at__gt=current_time,
         ).exclude(
             status__in=[TaskStatus.DONE.value, TaskStatus.EXPIRED.value, TaskStatus.CANCELLED.value]
         )
