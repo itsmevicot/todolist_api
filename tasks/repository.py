@@ -69,13 +69,15 @@ class TaskRepository:
     @staticmethod
     def get_tasks_expiring_soon(hours: int) -> List[Task]:
         """
-        Fetch tasks that are set to expire within the next `hours`.
+        Fetch tasks that are set to expire within the next `hours`, excluding tasks
+        with a status of DONE, EXPIRED or CANCELLED.
         """
         three_hours_later = now() + timedelta(hours=hours)
         return Task.objects.filter(
             expires_at__lte=three_hours_later,
             expires_at__gt=now(),
-            status=TaskStatus.CREATED.value,
+        ).exclude(
+            status__in=[TaskStatus.DONE.value, TaskStatus.EXPIRED.value, TaskStatus.CANCELLED.value]
         )
 
     @staticmethod
