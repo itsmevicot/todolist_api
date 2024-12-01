@@ -16,13 +16,9 @@ class TaskCreateSerializer(serializers.Serializer):
     expires_at = serializers.DateTimeField(required=False, allow_null=True)
 
     def validate_status(self, value):
-        """
-        Convert status value back to Enum for consistency in the application logic.
-        """
-        try:
-            return TaskStatus(value)
-        except ValueError:
+        if value not in [status.value for status in TaskStatus]:
             raise serializers.ValidationError(f"Invalid status value: {value}")
+        return value
 
 
 class TaskUpdateSerializer(serializers.Serializer):
@@ -32,10 +28,6 @@ class TaskUpdateSerializer(serializers.Serializer):
     expires_at = serializers.DateTimeField(required=False, allow_null=True)
 
     def validate_status(self, value):
-        """
-        Convert status value back to Enum for consistency in the application logic.
-        """
-        try:
-            return TaskStatus(value)
-        except ValueError:
+        if value not in [status.value for status in TaskStatus]:
             raise serializers.ValidationError(f"Invalid status value: {value}")
+        return value

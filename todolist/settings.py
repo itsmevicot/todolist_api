@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'authentication',
     'tasks',
     'users',
-    'utils',
     'rest_framework',
     'drf_yasg',
 ]
@@ -149,7 +148,12 @@ REST_FRAMEWORK = {
     'DATE_FORMAT': "%d/%m/%Y",
     'DATETIME_FORMAT': "%d/%m/%Y %H:%M",
     'DATE_INPUT_FORMATS': ["%d/%m/%Y"],
-    'DATETIME_INPUT_FORMATS': ["%d/%m/%Y %H:%M"],
+    'DATETIME_INPUT_FORMATS': [
+        "%d/%m/%Y %H:%M",
+        "%d/%m/%Y %H:%M:%S",
+        "%d/%m/%YT%H:%M",
+        "%d/%m/%YT%H:%M:%S",
+    ]
 
 }
 
