@@ -1,4 +1,6 @@
-from authentication.models import User
+from typing import Optional
+
+from users.models import User
 
 
 class UserRepository:
@@ -8,7 +10,7 @@ class UserRepository:
             name: str,
             password: str,
             is_staff: bool = False
-    ):
+    ) -> User:
         user = User.objects.create_user(
             email=email,
             name=name,
@@ -17,3 +19,9 @@ class UserRepository:
         )
 
         return user
+
+    @staticmethod
+    def get_user_by_email(
+            email: str
+    ) -> Optional[User]:
+        return User.objects.filter(email=email).first()

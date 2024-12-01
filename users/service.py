@@ -1,8 +1,13 @@
-from typing import Optional
+import logging
+from typing import Optional, Dict
 
-from rest_framework.exceptions import ValidationError
+from django.db import transaction
 
+from users.models import User
 from users.repository import UserRepository
+from utils.exceptions import UserAlreadyExistsException
+
+logger = logging.getLogger(__name__)
 
 
 class UserService:
@@ -12,14 +17,20 @@ class UserService:
     ):
         self.user_repository = user_repository or UserRepository()
 
-    def create_user(
-            self,
-            email: str,
-            name: str,
-            password: str
-    ):
-        if not email or not name or not password:
-            raise ValidationError("E-mail, name, and password are required.")
+    @transaction.atomic
+    def create_user(self, data: Dict) -> User:
+        try:
+            if self.user_repository.get_user_by_email(data.get("email")):
+                raise UserAlreadyExistsException()
+            logger.info(f"Creating user with data: {data}")
+            user = self.user_repository.create_user(**data)
+            logger.info(f"Created user with ID: {user.pk}")
+            return user
 
-        user = self.user_repository.create_user(email=email, name=name, password=password)
-        return user
+        except UserAlreadyExistsException as e:
+            logger.error(f"User already exists: {e.detail}")
+            raise
+
+        except Exception as e:
+            logger.error(f"Failed to create user: {str(e)}")
+            raise
