@@ -1,5 +1,9 @@
+from datetime import timedelta
 from typing import Optional, List
 
+from django.utils.timezone import now
+
+from tasks.enum import TaskStatus
 from tasks.models import Task
 
 
@@ -34,5 +38,36 @@ class TaskRepository:
         """
         for key, value in kwargs.items():
             setattr(task, key, value)
+        task.save()
+        return task
+
+    @staticmethod
+    def get_tasks_expiring_soon(hours: int) -> List[Task]:
+        """
+        Fetch tasks that are set to expire within the next `hours`.
+        """
+        three_hours_later = now() + timedelta(hours=hours)
+        return Task.objects.filter(
+            expires_at__lte=three_hours_later,
+            expires_at__gt=now(),
+            status=TaskStatus.CREATED.value,
+        )
+
+    @staticmethod
+    def get_expired_tasks() -> List[Task]:
+        """
+        Fetch tasks whose expiry date has passed and are still active.
+        """
+        return Task.objects.filter(
+            expires_at__lt=now(),
+            active=True
+        ).exclude(status=TaskStatus.EXPIRED.value)
+
+    @staticmethod
+    def update_task_status(task: Task, status: TaskStatus) -> Task:
+        """
+        Update the status of a task and save it.
+        """
+        task.status = status
         task.save()
         return task

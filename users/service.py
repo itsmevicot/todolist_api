@@ -6,6 +6,7 @@ from django.db import transaction
 from users.models import User
 from users.repository import UserRepository
 from utils.exceptions import UserAlreadyExistsException
+from users.tasks import send_welcome_email
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,8 @@ class UserService:
             logger.info(f"Creating user with data: {data}")
             user = self.user_repository.create_user(**data)
             logger.info(f"Created user with ID: {user.pk}")
+            send_welcome_email.delay(user.email, user.name)
+            logger.info(f"Welcome email task triggered for user ID: {user.id}")
             return user
 
         except UserAlreadyExistsException as e:

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
+from celery import schedules
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -230,7 +231,14 @@ CELERY_WORKER_SEND_TASK_EVENTS = True
 # Celery Beat
 
 CELERY_BEAT_SCHEDULE = {
-
+    'send-expiry-reminder-every-hour': {
+        'task': 'tasks.tasks.send_expiry_reminder',
+        'schedule': schedules.crontab(minute=0),
+    },
+    'mark-expired-tasks-every-15-minutes': {
+        'task': 'tasks.tasks.mark_expired_tasks',
+        'schedule': schedules.crontab(minute='*/15'),
+    },
 }
 
 
