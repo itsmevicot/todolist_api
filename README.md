@@ -15,7 +15,7 @@ This project demonstrates a fully functional To-Do-List application, showcasing 
 - Uses logging to facilitate debugging and error tracking.
 - Unit tests for services, repositories, and views with 98% test coverage:
 
-![img.png](utils/docs/test_coverage_98%.png)
+![img.png](utils/docs/test_coverage_98.png)
 
 ## Prerequisites
 
