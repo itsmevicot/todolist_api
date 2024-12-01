@@ -77,10 +77,8 @@ class TaskService:
             logger.info(f"Successfully updated task ID {task_id} for user ID {user.id}")
             return updated_task
         except TaskNotFoundException:
-            logger.error(f"Task with ID {task_id} not found for update.")
             raise
         except TaskUnauthorizedAccessException:
-            logger.error(f"Unauthorized update attempt for task ID {task_id} by user ID {user.id}.")
             raise
         except Exception as e:
             logger.error(f"Failed to update task ID {task_id} for user ID {user.id}: {str(e)}")
