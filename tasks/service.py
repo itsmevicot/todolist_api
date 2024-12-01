@@ -18,9 +18,26 @@ class TaskService:
     ):
         self.task_repository = task_repository or TaskRepository()
 
-    def get_tasks(self, user: User) -> List[Task]:
-        logger.info(f"Fetching all tasks for user ID: {user.id}.")
-        return self.task_repository.get_tasks_by_user(user)
+    def get_tasks(
+            self,
+            user: User,
+            is_active_filter: Optional[bool] = True,
+            status_filter: Optional[str] = None
+    ) -> List[Task]:
+        """
+        Fetch tasks for a user based on filters.
+
+        :param user: The owner of the tasks.
+        :param is_active_filter: A boolean indicating whether to fetch active tasks.
+        :param status_filter: The status of the task (e.g., 'TODO', 'IN_PROGRESS', 'DONE', 'EXPIRED').
+        :return: A list of tasks.
+        """
+        logger.info(
+            f"Fetching tasks for user ID: {user.id} "
+            f"with is_active_filter: {is_active_filter}, status_filter: {status_filter}."
+        )
+        tasks = self.task_repository.get_tasks_by_user(user, is_active_filter, status_filter)
+        return list(tasks)
 
     def get_task_details(self, task_id: int, user: User) -> Task:
         logger.info(f"Fetching task with ID: {task_id} for user ID: {user.id}.")

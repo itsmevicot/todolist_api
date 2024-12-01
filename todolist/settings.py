@@ -150,6 +150,7 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%d/%m/%Y %H:%M",
     'DATE_INPUT_FORMATS': ["%d/%m/%Y"],
     'DATETIME_INPUT_FORMATS': [
+        "%d/%m/%Y",
         "%d/%m/%Y %H:%M",
         "%d/%m/%Y %H:%M:%S",
         "%d/%m/%YT%H:%M",
@@ -195,11 +196,6 @@ LOGGING = {
         "level": "DEBUG",
     },
     "loggers": {
-        "tasks": {
-            "handlers": ["console"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
         "celery": {
             "handlers": ["console"],
             "level": "INFO",

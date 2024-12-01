@@ -1,19 +1,38 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from typing import Optional, List
 
+from django.db.models import QuerySet
 from django.utils.timezone import now
 
 from tasks.enum import TaskStatus
 from tasks.models import Task
+from users.models import User
 
 
 class TaskRepository:
     @staticmethod
-    def get_tasks_by_user(user) -> List[Task]:
+    def get_tasks_by_user(
+            user: User,
+            is_active_filter: Optional[bool] = True,
+            status_filter: Optional[TaskStatus] = None
+    ) -> QuerySet:
         """
-        Fetch all active tasks for a user.
+        Fetch tasks for a user with optional filters.
+
+        :param user: The owner of the tasks.
+        :param is_active_filter: A boolean indicating whether to fetch active tasks.
+        :param status_filter: The status of the task (e.g., 'TODO', 'IN_PROGRESS', 'DONE').
+        :return: A QuerySet of tasks.
         """
-        return Task.objects.filter(owner=user)
+        tasks = Task.objects.filter(owner=user)
+
+        if is_active_filter is not None:
+            tasks = tasks.filter(active=is_active_filter)
+
+        if status_filter:
+            tasks = tasks.filter(status=status_filter)
+
+        return tasks
 
     @staticmethod
     def get_task_by_id(task_id: int) -> Optional[Task]:
@@ -23,7 +42,13 @@ class TaskRepository:
         return Task.objects.filter(id=task_id).first()
 
     @staticmethod
-    def create_task(owner, title: str, description: str, status: str = "CREATED", expires_at=None) -> Task:
+    def create_task(
+            owner: User,
+            title: str,
+            description: str,
+            status: TaskStatus = TaskStatus.CREATED.value,
+            expires_at: datetime = None
+    ) -> Task:
         """
         Create a new task.
         """

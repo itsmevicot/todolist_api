@@ -5,7 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from tasks.serializers import TaskSerializer, TaskCreateSerializer, TaskUpdateSerializer
+from tasks.serializers import TaskResponseSerializer, TaskCreateSerializer, TaskUpdateSerializer, TaskDetailSerializer, \
+    TaskFilterSerializer
 from tasks.service import TaskService
 
 
@@ -22,10 +23,16 @@ class TaskListView(APIView):
 
     def get(self, request):
         """
-        Get all tasks for the authenticated user.
+        Get tasks for the authenticated user based on filters.
         """
-        tasks = self.task_service.get_tasks(user=request.user)
-        serializer = TaskSerializer(tasks, many=True)
+        filter_serializer = TaskFilterSerializer(data=request.query_params)
+        filter_serializer.is_valid(raise_exception=True)
+
+        is_active = filter_serializer.validated_data.get("is_active")
+        task_status = filter_serializer.validated_data.get("status")
+
+        tasks = self.task_service.get_tasks(user=request.user, is_active_filter=is_active, status_filter=task_status)
+        serializer = TaskResponseSerializer(tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
@@ -35,7 +42,7 @@ class TaskListView(APIView):
         serializer = TaskCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         task = self.task_service.create_task(serializer.validated_data, user=request.user)
-        return Response(TaskSerializer(task).data, status=status.HTTP_201_CREATED)
+        return Response(TaskResponseSerializer(task).data, status=status.HTTP_201_CREATED)
 
 
 class TaskDetailView(APIView):
@@ -54,17 +61,17 @@ class TaskDetailView(APIView):
         Get task details for the authenticated user.
         """
         task = self.task_service.get_task_details(task_id, user=request.user)
-        serializer = TaskSerializer(task)
+        serializer = TaskDetailSerializer(task)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, task_id):
         """
-        Update task details for the authenticated user.
+        Update task details for the authenticated user. Allows partial updates.
         """
-        serializer = TaskUpdateSerializer(data=request.data)
+        serializer = TaskUpdateSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         task = self.task_service.update_task(task_id, serializer.validated_data, user=request.user)
-        return Response(TaskSerializer(task).data, status=status.HTTP_200_OK)
+        return Response(TaskDetailSerializer(task).data, status=status.HTTP_200_OK)
 
     def delete(self, request, task_id):
         """
