@@ -13,7 +13,9 @@ This project demonstrates a fully functional To-Do-List application, showcasing 
 - Easy deployment using Docker and Docker Compose.
 - A Postman API collection for streamlined testing.
 - Uses logging to facilitate debugging and error tracking.
-- Unit tests for services, repositories, and views with test coverage.
+- Unit tests for services, repositories, and views with 98% test coverage:
+
+![img.png](utils/docs/test_coverage_98%.png)
 
 ## Prerequisites
 
@@ -106,6 +108,8 @@ Example:
 ```bash
 pytest unit_tests/authentication
 ```
+
+A reminder that the test [test_rate_limit_reset_after_window](unit_tests/authentication/test_authentication.py) takes 1 minute to run, as it tests the rate limit feature.
 
 ## API Documentation
 
