@@ -12,12 +12,16 @@ This project demonstrates a fully functional To-Do-List application, showcasing 
 - Comprehensive API documentation with Swagger (`/docs`) and Redoc (`/redoc`).
 - Easy deployment using Docker and Docker Compose.
 - A Postman API collection for streamlined testing.
+- Uses logging to facilitate debugging and error tracking.
+- Unit tests for services, repositories, and views with test coverage.
 
 ## Prerequisites
 
 - Python >= 3.10
 - Docker and Docker Compose (optional for containerized deployment)
 - PostgreSQL (or Dockerized equivalent)
+- Celery for asynchronous task management
+- Redis as a message broker for Celery
 - [Postman](https://www.postman.com/downloads/) (optional for testing)
 
 ## How to Run the Project
