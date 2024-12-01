@@ -74,6 +74,11 @@ This project demonstrates a fully functional To-Do-List application, showcasing 
 
 8. Access the project at [http://localhost:8000](http://localhost:8000).
 
+9. You can load a fixture into the database to have some initial dump data:
+   ```bash
+   python manage.py loaddata fixtures/dump_data.json
+   ```
+
 ## Technologies Used
 
 - **Backend**: Python, Django, Django REST Framework
