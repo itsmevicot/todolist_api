@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'utils.middlewares.RateLimitMiddleware',
 ]
 
 ROOT_URLCONF = 'todolist.urls'
@@ -237,6 +238,18 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
+# Cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'KEY_PREFIX': 'django_cache:',
+        }
+    }
+}
 
 # Swagger
 
