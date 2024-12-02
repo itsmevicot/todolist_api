@@ -79,6 +79,9 @@ This project demonstrates a fully functional To-Do-List application, showcasing 
    python manage.py loaddata fixtures/dump_data.json
    ```
 
+10. It's important to mention that you have to create an User to be able to generate a token and use the API.
+**The token must go on the header of the request as `Authorization Bearer <token>`**.
+
 ## Technologies Used
 
 - **Backend**: Python, Django, Django REST Framework
