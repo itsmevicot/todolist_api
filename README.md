@@ -1,5 +1,5 @@
 
-# Turivius To-Do-List Challenge
+# To-Do-List API
 
 A simple To-Do-List application with features such as user authentication, task management, email notifications, and test coverage.
 
@@ -30,8 +30,8 @@ This project demonstrates a fully functional To-Do-List application, showcasing 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/itsmevicot/todolist_turivius_challenge
-   cd todolist_turivius_challenge
+   git clone https://github.com/itsmevicot/todolist_api
+   cd todolist_api
    ```
 
 2. **Optional**: Create a virtual environment and activate it:
